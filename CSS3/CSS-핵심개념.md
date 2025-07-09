@@ -231,7 +231,7 @@ url('c.png');
    <img src = 'https://bakey-api.codeit.kr/api/files/resource?root=static&seqId=5637&directory=display-summary-001.png&name=display-summary-001.png'>
 
 2. inline
-   : 글을 쓰는 방향으로 줄이 바뀌면서 배치된다 블록과 달리 크기를 지정할 수 없음 (즉, width나 height를 줄 수 없다)
+   : 글을 쓰는 방향으로 줄이 바뀌면서 배치된다 블록과 달리 크기를 지정할 수 없음 (즉, width나 height를 줄 수 없다) <br />
    기본적으로 display 값이 inline 인 태그들
 
    1. &lt;a&gt;
@@ -287,21 +287,21 @@ url('c.png');
 
 1. 아이디 + 클래스
 
-```
-#mongolia.title
-```
+   ```
+   #mongolia.title
+   ```
 
 2. 클래스 + 클래스
 
-```
-.large.title
-```
+   ```
+   .large.title
+   ```
 
 3. 태그 + 아이디 + 클래스
 
-```
-h2#mongolia.large.title
-```
+   ```
+   h2#mongolia.large.title
+   ```
 
 #### 자손 결합자
 
@@ -359,7 +359,7 @@ h1::before {
 : 우선순위가 높은 규칙일수록 우선적으로 적용하는 속성
 
 1. 코드가 더 아래에 있을 수록 우선순위 높음
-2. 브라우저에서 기본으로 제공하는 스타일시트 < 우리가 작성한 코드 (h2[브라우저 기본] < h2[우리가 작성])
+2. 브라우저에서 기본으로 제공하는 스타일시트 < 우리가 작성한 코드 <br />(h2[브라우저 기본] < h2[우리가 작성])
 3. 명시도 계산 (아이디, 클래스, 태그 순)
 4. 상속되는 속성들이 정해져 있음 (color, font-family, font-size, font-weight, line-height, text-align 등 ...) -> 텍스트 관련은 기본적으로 **자식도 똑같이 써라**가 기본정책이고, 레이아웃이나 박스 스타일은 **자식이 알아서 정하라**는 방식
 
