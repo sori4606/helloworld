@@ -2,4 +2,4 @@
 
 ## 목차
 
-[HTML 정리 보러 가기](./HTML.md)
+- [HTML 정리 보러 가기](./HTML.md) <br />
