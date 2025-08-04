@@ -202,6 +202,14 @@ export async function getReviews() {
 
 => `response.json()` = "서버 응답을 JS 객체로 바꿔줘 ! "
 
+```jsx
+// JSON 파싱 후
+const response = await fetch("/api/user");
+const userData = await response.json(); // {name: "김철수", age: 25}
+console.log(typeof userData); // "object"
+console.log(userData.name); // "김철수" - 이제 객체 속성에 접근 가능!
+```
+
 #### `fallback 데이터`란 ?
 
 - 네트워크 오류 등으로 실제 데이터를 못 받아올 경우, 대신 제공하는 기본값
@@ -352,7 +360,7 @@ async function postData() {
 body: JSON.stringify({ name: "홍길동", age: 30 }),
 ```
 
-- `body`: 실제로 서버에 전달할 데이터 본문
+- `body`: 실제로 서버에 전달할 데이터 본문. GET, DELETE는 보통 body 없고, POST, PATCH에서 주로 사용
 
 - `JSON.stringify()`: 자바스크립트 객체를 JSON 문자열로 바꿔주는 함수 <br />
   → 서버는 문자열 형태의 JSON을 받기 때문에 꼭 필요함!
@@ -360,6 +368,112 @@ body: JSON.stringify({ name: "홍길동", age: 30 }),
 ```js
 { name: "홍길동" } → '{"name":"홍길동"}'
 ```
+
+POST 예시.
+
+```jsx
+const surveyData = {
+  mbti: "ENFP",
+  colorCode: "#ABCDEF",
+  password: "0000",
+};
+
+const res = fetch("https://learn.codeit.kr/api/color-surveys", {
+  method: "POST",
+  body: JSON.stringify(surveyData),
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+const data = await res.json();
+console.log(data);
+```
+
+#### 오류처리
+
+: fetch는 URL이 이상하거나 헤더 정보가 이상해서 리퀘스트 자체가 실패하는 경우에만 Promise를 reject 한다. <br />
+그러면, try-catch로 감싸고, response.ok로 확인해라 ! (가장 일반적이고 안전한 방법)
+
+ex.
+
+```jsx
+const apiCall = async (url, options = {}) => {
+  try {
+    const response = await fetch(url, options);
+
+    // HTTP 상태 코드 확인 (가장 중요!)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    // 네트워크 오류 + HTTP 오류 모두 처리
+    console.error("API 호출 실패:", error.message);
+    throw error; // 필요시 상위로 전달
+  }
+};
+
+// 사용
+try {
+  const data = await apiCall("/api/users"); //options 생략시 기본적으로 get 요청
+  console.log("성공:", data);
+} catch (error) {
+  alert("데이터를 불러올 수 없습니다");
+}
+```
+
+#### `코드 설명`
+
+url : 요청할 API 엔드포인트 <br />
+options = {} : fetch API의 설정 객체 (기본값 : 빈 객체) <br />
+
+options 객체 예시.
+
+```jsx
+// options 객체 예시
+const options = {
+  method: "POST", // HTTP 메서드
+  headers: {
+    // 요청 헤더
+    "Content-Type": "application/json",
+    Authorization: "Bearer token123",
+  },
+  body: JSON.stringify({
+    // 요청 바디
+    name: "John",
+    age: 30,
+  }),
+};
+```
+
+#### API 엔드포인트 ?
+
+: **엔드포인트 = 끝점**, 즉 클라이언트가 서버의 특정 기능에 접근하는 접점. <br /> 그니까 특정기능의 경로라고 생각하면 됨. base URL 뒤에 오는 값들이라고 생각하자 ! (`https://example.com/users/123` 이 있으면, users/123이 엔드포인트) <br />
+
+#### HTTP Status Code 정리
+
+| 분류                     | 상태코드                      | 이름           | 의미 및 실무 활용                             |
+| ------------------------ | ----------------------------- | -------------- | --------------------------------------------- |
+| ✅ 성공 (2xx)            | **200 OK**                    | 성공           | 요청 성공. 가장 일반적인 응답                 |
+|                          | **201 Created**               | 생성됨         | POST 요청으로 리소스 생성 성공                |
+|                          | **204 No Content**            | 콘텐츠 없음    | 성공했지만 응답 본문이 없음 (ex. DELETE)      |
+| 🚦 리다이렉트 (3xx)      | **301 Moved Permanently**     | 영구 이동      | 주소가 영구 변경됨. SEO에도 영향              |
+|                          | **302 Found**                 | 임시 이동      | 다른 위치로 임시 이동. 로그인 후 리디렉션 등  |
+|                          | **304 Not Modified**          | 변경 없음      | 캐시된 데이터가 그대로일 때 사용. 성능 최적화 |
+| ❌ 클라이언트 오류 (4xx) | **400 Bad Request**           | 잘못된 요청    | 파라미터 누락, 형식 오류 등                   |
+|                          | **401 Unauthorized**          | 인증 필요      | 로그인 안 됐거나 토큰 없음                    |
+|                          | **403 Forbidden**             | 금지됨         | 권한은 있지만 접근 불가                       |
+|                          | **404 Not Found**             | 없음           | 리소스나 경로가 존재하지 않음                 |
+| 🔥 서버 오류 (5xx)       | **500 Internal Server Error** | 내부 서버 오류 | 서버 내부 문제. 개발자 확인 필요              |
+
+- 200, 201, 204 → 정상 작동 흐름 (조회/생성/삭제)
+
+- 301, 302, 304 → 페이지 이동/캐시 관련
+
+- 400, 401, 403, 404 → 클라이언트 쪽 실수나 인증 문제
+
+- 500 → 서버 터짐
 
 ### `axios` 기본 사용
 
@@ -398,6 +512,72 @@ export async function getReviews() {
     return { reviews: [] }; // fallback
   }
 }
+```
+
+#### axios 쿼리 파라미터 사용하기
+
+`쿼리 파라미터 ? ` : URL 뒤에 추가해서 서버에 전달하는 정보를 의미함.
+
+```bash
+https://learn.codeit.kr/api/color-surveys?page=1&limit=10&color=blue
+```
+
+여기서: <br />
+
+- URL 뒤에 붙은 부분 (`?page=1&limit=10&color=blue`)이 바로 쿼리 파라미터.
+- 여러 개의 파라미터를 &로 연결해서 보냄
+
+Axios 에서는 `params`라는 옵션을 이용해서 전달. <br />
+
+형태 :
+
+```js
+axios.get(url, { params: { key: value } });
+```
+
+예시코드
+
+```jsx
+const response = await axios.get("https://example.com/api/users", {
+  params: {
+    id: 10,
+    name: "민교",
+  },
+});
+```
+
+이러면, 실제 요청 URL은,
+
+```bash
+GET https://example.com/api/users?id=10&name=민교
+```
+
+⚡️ 왜 쿼리 파라미터를 사용할까?
+
+- 데이터를 조회하거나 검색, 필터링, 정렬할 때 조건을 전달 (`?color=red`)
+- 페이지네이션(pagination)과 같은 기능 구현 (`?page=3&limit=20`)
+- 같은 API 엔드포인트에서 다양한 조건의 데이터를 요청할 때 사용 (`sort=asc&field=date`)
+
+쿼리 파라미터 실전예시.
+
+```jsx
+export async function getColorSurveys(params = {}) {
+  const res = await axios.get("https://learn.codeit.kr/api/color-surveys", {
+    params,
+  });
+  return res.data;
+}
+// 파라미터 없이 호출
+const allSurveys = await getColorSurveys();
+// 실제 요청: GET https://learn.codeit.kr/api/color-surveys
+
+// 파라미터와 함께 호출
+const filteredSurveys = await getColorSurveys({
+  page: 1,
+  limit: 10,
+  color: "blue",
+});
+// 실제 요청: GET https://learn.codeit.kr/api/color-surveys?page=1&limit=10&color=blue
 ```
 
 #### axios 실전 예시
@@ -449,29 +629,79 @@ export async function sendReview(review) {
 }
 ```
 
-#### HTTP Status Code 정리
+#### 오류처리
 
-| 분류                     | 상태코드                      | 이름           | 의미 및 실무 활용                             |
-| ------------------------ | ----------------------------- | -------------- | --------------------------------------------- |
-| ✅ 성공 (2xx)            | **200 OK**                    | 성공           | 요청 성공. 가장 일반적인 응답                 |
-|                          | **201 Created**               | 생성됨         | POST 요청으로 리소스 생성 성공                |
-|                          | **204 No Content**            | 콘텐츠 없음    | 성공했지만 응답 본문이 없음 (ex. DELETE)      |
-| 🚦 리다이렉트 (3xx)      | **301 Moved Permanently**     | 영구 이동      | 주소가 영구 변경됨. SEO에도 영향              |
-|                          | **302 Found**                 | 임시 이동      | 다른 위치로 임시 이동. 로그인 후 리디렉션 등  |
-|                          | **304 Not Modified**          | 변경 없음      | 캐시된 데이터가 그대로일 때 사용. 성능 최적화 |
-| ❌ 클라이언트 오류 (4xx) | **400 Bad Request**           | 잘못된 요청    | 파라미터 누락, 형식 오류 등                   |
-|                          | **401 Unauthorized**          | 인증 필요      | 로그인 안 됐거나 토큰 없음                    |
-|                          | **403 Forbidden**             | 금지됨         | 권한은 있지만 접근 불가                       |
-|                          | **404 Not Found**             | 없음           | 리소스나 경로가 존재하지 않음                 |
-| 🔥 서버 오류 (5xx)       | **500 Internal Server Error** | 내부 서버 오류 | 서버 내부 문제. 개발자 확인 필요              |
+| 특징                                  | fetch                               | axios                          |
+| ------------------------------------- | ----------------------------------- | ------------------------------ |
+| 네트워크 오류                         | catch 블록으로 감지 가능            | catch 블록으로 감지 가능       |
+| HTTP 상태 코드 에러 (`404`, `500` 등) | **직접 확인**해야 함(`response.ok`) | 자동으로 catch 블록으로 들어감 |
 
-- 200, 201, 204 → 정상 작동 흐름 (조회/생성/삭제)
+예시.
 
-- 301, 302, 304 → 페이지 이동/캐시 관련
+```jsx
+import axios from "axios";
 
-- 400, 401, 403, 404 → 클라이언트 쪽 실수나 인증 문제
+const apiCall = async (url, options = {}) => {
+  try {
+    const response = await axios(url, options);
+    return response.data;
+  } catch (error) {
+    // 더 상세한 오류 처리
+    if (error.response) {
+      // 서버에서 응답은 받았지만, 상태 코드가 2xx가 아님.
+      console.error(
+        "서버 응답 에러:",
+        error.response.status,
+        error.response.data
+      );
+      throw new Error(`서버 응답 에러: ${error.response.status}`);
+    } else if (error.request) {
+      // 서버가 응답을 아예 안 했을 때
+      console.error("서버 무응답 에러:", error.request);
+      throw new Error("서버가 응답하지 않습니다.");
+    } else {
+      // 요청 설정 중에 오류 발생
+      console.error("API 요청 설정 에러:", error.message);
+      throw new Error(`API 요청 설정 에러: ${error.message}`);
+    }
+  }
+};
 
-- 500 → 서버 터짐
+// 사용 예시
+import { useEffect, useState } from "react";
+import apiCall from "./apiCall";
+
+function UsersList() {
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
+
+  const fetchUsers = async () => {
+    try {
+      const data = await apiCall("/api/users");
+      setUsers(data);
+    } catch (error) {
+      // apiCall에서 throw한 error가 여기로 넘어옴.
+      setError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  if (error) return <div>에러: {error}</div>;
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default UsersList;
+```
 
 ### 논리 연산자 `!` (NOT) 정리
 
