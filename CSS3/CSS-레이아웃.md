@@ -1,5 +1,13 @@
 # CSS 레이아웃
 
+## 목차
+
+- [z-index & 쌓임 맥락](./CSS-레이아웃.md#z-index--쌓임-맥락-stacking-context)
+- [position 속성](./CSS-레이아웃.md#position-속성)
+- [flex 속성](./CSS-레이아웃.md#flex-속성)
+- [인라인 안에서 세로정렬](./CSS-레이아웃.md#인라인-안에서-플렉스-박스--인라인-안에서-세로정렬-하고-싶을-때)
+- [Grid 속성](./CSS-레이아웃.md#grid-display--grid-2차원-레이아웃)
+
 ### z-index & 쌓임 맥락 (Stacking Context)
 
 ---
@@ -9,10 +17,14 @@
 
 1-1 기본 쌓임 순서
 
-1. 루트 요소 <html>. (가장 아래)
+1. 루트 요소 `<html>`. (가장 아래)
+
 2. position 있고 z-index 음수 (숫자 큰 순 -> 동순위는 DOM 순) (DOM 순 ? -> 나중에 등장한 요소가 위에 쌓인다는 말)
+
 3. position 없음 (DOM 순).
+
 4. position 있고 z-index: auto (DOM 순)
+
 5. position 있고 z-index 양수 (숫자 큰 순 -> 동순위는 DOM 순)
 
 1-2 새 쌓임 맥락을 만드는 트리거 ( 이 트리거를 만나면 부모와 독립된 3D 공간이 만들어져 형제 요소의 z-index 영향을 받지 않음.)
@@ -32,11 +44,27 @@
 
 ---
 
-1. static(기본) : 왼쪽에서 오른쪽, 위에서 아래로 쌓임. top/right/... z-index 무효
-2. relative : 원래 위치를 기준으로 배치
-3. absolute : 가장 가까운 포지셔닝이 된 조상요소를 기준으로 배치
-4. fixed : 브라우저 화면을 기준으로 배치
-5. sticky : static처럼 배치되어 있다가 정해진 위치에 브라우저가 스크롤 되면 그때부터 fixed처럼 고정
+1. static(기본) : 왼쪽에서 오른쪽, 위에서 아래로 쌓임. 이 경우 원래 있어야 할 위치인 HTML에 작성된 순서 그대로 브라우저 화면에 표시됨. top/right/... z-index 적용안됨
+
+   <img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-static.svg?table=block&id=1506fd22-8e8d-814c-9c98-c14fcd15b0e2&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
+
+2. relative : - 요소의 원래 위치를 기준으로 상대적으로 배치. 이때 요소의 원래 자리는 그대로 차지하고 있고, `top`, `bottom`, `left`, `right` 속성을 이용해서 요소의 원래 위치 기준 이동하도록 설정할 수 있다.
+
+<img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-relative.svg?table=block&id=1506fd22-8e8d-81eb-9f47-d4d55f75df0e&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
+
+3. absolute : 가장 가까운 포지셔닝(static 이 아닌 position 속성 값)이 된 조상 요소를 기준으로 배치. 이때 글의 흐름에서 완전히 빠져서, 요소의 원래 자리는 차지하지 않고, 보통 상위 요소의 position 속성을 `relative` 로 지정하여 배치할 기준을 잡고 사용한다.
+
+<img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-absolute.svg?table=block&id=1506fd22-8e8d-81b6-9dc6-f103d79200aa&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
+
+4. fixed : 브라우저 전체 화면을 기준으로 고정된 배치. `top`, `bottom`, `left`,`right` 속성은 브라우저의 상, 하, 좌, 우에서 해당 요소가 얼마나 떨어져 있는지를 결정. 글의 흐름에서 완전히 빠져서, 요소의 원래 자리는 차지하지 않고, 내비게이션을 만들 때 많이 사용하는데, 요소의 원래 자리를 차지하지 않기 때문에 요소간 겹치지 않도록 마진을 넣어주기도 한다.
+
+<img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-fixed.svg?table=block&id=1506fd22-8e8d-8183-a2cf-c217155b6d42&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
+
+5. sticky : `static` 처럼 원래 위치에 배치해 있다가, 정해진 위치에 브라우저가 스크롤되면 그때부터 `fixed`처럼 고정되어 배치됨. 기본적으로는 `static` 처럼 배치하기 때문에 요소의 원래 자리를 차지한다. `top`, `bottom`, `left`, `right` 설정이 필요하고, 가장 가까운 scroll되는 조상을 기준으로 배치함.
+
+<img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-sticky1.svg?table=block&id=1506fd22-8e8d-8158-81d2-c619877608f6&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
+
+<img src = 'https://codeit.notion.site/image/https%3A%2F%2Fchenhuijing.com%2Fassets%2Fimages%2Fposts%2Fcss-positioning%2Fposition-sticky2.svg?table=block&id=1506fd22-8e8d-8135-89ea-fa74f393cfa3&spaceId=a29b669d-e680-438e-b18c-08888fc54a21&userId=&cache=v2'>
 
 ### flex 속성
 
@@ -75,6 +103,13 @@ flex: 0 auto; // flex: 0 1 auto 와 같음. 줄어들지만 늘어나지 않음
      flex: 1 1 200px; /* 200px을 출발점으로 grow/shrink */
    }
    ```
+
+   `위의 예시에서`
+
+   - 컨테이너가 1000px이고 아이템이 2개라면
+   - 각 아이템이 200px씩 차지 → 400px 사용
+   - 남은 600px를 1:1로 나눠서 각각 300px씩 추가
+   - 최종 결과: 각 아이템이 500px씩
 
 3. flex-shrink
 
@@ -137,8 +172,30 @@ flex: 0 auto; // flex: 0 1 auto 와 같음. 줄어들지만 늘어나지 않음
 9. align-content
 
    - 여러 행(열) 묶음의 교차축 정렬 (한 줄로만 이루어진 플렉스 컨테이너에는 아무 효과 없음)
-   - 전체 content 들의 위치정렬로 이해하면 될 듯
+   - 전체 content 들의 위치정렬로 이해하면 될 듯 (줄 자체들의 정렬)
    - space-around, center 등
+
+   `align-items` VS `align-content`
+
+   `align-items` (단일 줄 내 정렬) :
+
+   ```plaintext
+   +------------------+
+   | [A] [B] [C]      | ← 이 줄 안에서 A,B,C 정렬
+   |                  |
+   +------------------+
+   ```
+
+   `align-content` (여러 줄 전체 정렬) :
+
+   ```plaintext
+   +------------------+
+   |                  |
+   | [A] [B]          |  ← 이 두 줄 전체를
+   | [C] [D]          |  ← 컨테이너 내에서 정렬
+   |                  |
+   +------------------+
+   ```
 
 10. gap
 
@@ -213,7 +270,7 @@ ex.
 
 ### Grid (display : grid, 2차원 레이아웃)
 
-- display:grid;
+- display: grid;
 - grid-template-columns: 100px 200px 100px;
 - grid-template-columns: 1fr 1fr 1fr; (비율 1:1:1) **또는** grid-template-columns: repeat(3, 1fr);
 - grid-template-columns: repeat(3, minmax(200px, 1fr)); => 최소너비 200px
