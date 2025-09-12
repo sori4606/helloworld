@@ -1,9 +1,26 @@
-## Styled Components
+# Styled Components
+
+## 목차
+
+- [Styled Components 정의](./Styled_Components.md#styled-components-란)
+- [Styled Components 특징](./Styled_Components.md#특징)
+- [Styled Components 설치방법](./Styled_Components.md#설치-방법)
+- [Styled Components 기본 사용법](./Styled_Components.md#기본-사용법)
+- [Styled Components 확장](./Styled_Components.md#기존-컴포넌트-확장)
+- [Styled Components 내부 특정 컴포넌트만 선택하기](./Styled_Components.md#내부-특정-컴포넌트만-선택해서-스타일링하기)
+- [Styled Components 동적 스타일링](./Styled_Components.md#props를-활용한-동적-스타일링)
+- [Styled Components 조건부 스타일링](./Styled_Components.md#조건부-스타일링)
+- [Styled Components 글로벌 스타일 지정](./Styled_Components.md#글로벌-스타일-지정하기)
+- [태그사용 VS className 사용](./Styled_Components.md#styled컴포넌트--classname-사용하기)
+- [Styled Components 테마 활용](./Styled_Components.md#테마-활용-themeprovider)
+- [원치않는 props가 전달되는 상황 해결하기](./Styled_Components.md#원치-않는-props-가-전달될-때)
+- [Styled Components 애니메이션 구현하기](./Styled_Components.md#애니메이션)
+- [Styled Components 장단점 비교](./Styled_Components.md#장단점-비교)
 
 ### Styled Components 란?
 
 Styled Components는 “컴포넌트 단위로 스타일을 선언”하는 CSS-in-JS 라이브러리이다. <br />
-JS/TS 파일 안에서 styled.button 같은 팩토리 함수로 스타일이 입혀진 React 컴포넌트를 만들고, 해당 컴포넌트가 고유한 className을 가진 CSS를 자동 생성·주입해준다 !
+JS/TS 파일 안에서 `styled.button` 같은 팩토리 함수로 스타일이 입혀진 React 컴포넌트를 만들고, 해당 컴포넌트가 고유한 className을 가진 CSS를 자동 생성·주입해준다 !
 
 팩토리 함수 : **"특정 객체 (또는 컴포넌트) 를 만들어서 반환해주는 함수"**
 
@@ -491,6 +508,41 @@ function App() {
 }
 ```
 
+`다크/라이트 모드 구현`
+
+```jsx
+import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+
+// 전역 스타일 - 여기서 body 배경 등을 테마로 설정
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: ${(props) => props.theme.colors.background};
+    color: ${(props) => props.theme.colors.text};
+    transition: all 0.3s ease;
+  }
+`;
+
+function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  const theme = {
+    colors: {
+      background: isDark ? "#1a1a1a" : "#ffffff",
+      text: isDark ? "#ffffff" : "#333333",
+      primary: isDark ? "#4dabf7" : "#007bff",
+    },
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle /> {/* 전역 스타일 적용 */}
+      <button onClick={() => setIsDark(!isDark)}>테마 변경</button>
+      <MyButton />
+    </ThemeProvider>
+  );
+}
+```
+
 하위 컴포넌트에서 테마를 사용할 때, <br />
 
 방법 1 : Styled Components로 사용
@@ -593,7 +645,7 @@ export default App;
 `<a>` 태그에는 underline 이라는 속성이 없음. -> Spread 하는 과정에서 의도하지 않은 underline Prop까지 내려간게 원인. <br />
 
 팁+)
-JSX에서 `...props`는 객체의 모든 속성을 한 번에 컴포넌트나 태그에 전달하는 문법이야
+JSX에서 `...props`는 객체의 모든 속성을 한 번에 컴포넌트나 태그에 전달하는 문법임.
 
 #### `해결1` : Spread를 그대로 쓰되, 필터링
 
