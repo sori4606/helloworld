@@ -1,5 +1,20 @@
 # CSS 핵심개념
 
+## 목차
+
+- [id값에 CSS](./CSS-핵심개념.md#id값에-css값-넣기---을-붙혀서-값을-넣는다)
+- [class에 CSS](./CSS-핵심개념.md#클래스에는----을-붙혀서-넣는다)
+- [line-height](./CSS-핵심개념.md#line-height는-글줄-간의-높이줄-간격를-조절하는-속성)
+- [백그라운드 이미지](./CSS-핵심개념.md#백그라운드-이미지-넣기)
+- [박스 모델](./CSS-핵심개념.md#박스-모델)
+- [마진 상쇄](./CSS-핵심개념.md#마진-상쇄)
+- [display 속성](./CSS-핵심개념.md#display-속성)
+- [float 속성](./CSS-핵심개념.md#float-속성)
+- [css 선택자](./CSS-핵심개념.md#css-선택자)
+- [가상 클래스](./CSS-핵심개념.md#가상-클래스)
+- [가상 요소](./CSS-핵심개념.md#가상-요소)
+- [Cascade](./CSS-핵심개념.md#캐스케이드)
+
 ### id값에 CSS값 넣기 -> '#'을 붙혀서 값을 넣는다.
 
 ex.
@@ -73,18 +88,30 @@ span {
 - **배경의 위치** : background-position : center (기본값 : left top, right, bottom, left, top 등)
 - **배경의 반복** : background-repeat : no-repeat (기본값 : repeat)
 - **배경의 크기** : background-size : cover (비율 유지하면서 꽉차게, 이미지 잘릴 수 있음.) <br />
-  (contain : 비율 유지하면서 최대한 크게, 이미지 잘리지 않음.)
+
+`background-size`
+
+```css
+background-size: cover; /* 비율 유지, 꽉 채움 (잘림 가능) */
+background-size: contain; /* 비율 유지, 최대한 크게, 이미지 잘리지 않음. */
+background-size: 100% 100%; /* 비율 무시, 강제로 꽉 채움 */
+background-size: 300px 200px; /* 고정 크기 */
+```
 
 +) 추가
 
-배경이미지는 여러개 넣을 수 있음. <br />
+배경이미지는 여러개 넣을 수 있음. 겹쳐서 효과를 만들 때 주로 씀. <br />
 ex.
 
+```css
+.section {
+  background-image: url("dots-pattern.png"), url("main-bg.jpg");
+  /* 점무늬 패턴 + 메인 배경 */
+}
 ```
-background-image:
-url('a.png');
-url('b.png');
-url('c.png');
+
+```css
+background-image: url("a.png"), url("b.png"), url("c.png");
 ```
 
 -> a.png 아래에 b.png가 깔리고, 맨 밑에는 c.png가 깔린다.
@@ -92,7 +119,7 @@ url('c.png');
 ### 그 외 나머지 CSS 속성들
 
 - **그라디언트** : background-image:
-  linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)); <br />
   -> 각도, 시작색상, 종료색상 순 (기본방향 각도는 180도 [위에서 아래] )
 
 - **불투명도** : opacity
@@ -129,6 +156,13 @@ url('c.png');
 
   -> 요소의 넓이는 100+30+30 = 160
 
+  why ?
+
+  - 콘텐츠: 100px
+  - 패딩: 30px + 30px = 60px
+  - 실제 요소 넓이: 100 + 60 = 160px
+  - 마진: 20px + 20px = 40px (주변 여백, 요소 크기 아님)
+
   만약, 이런게 아니라 더 직관적으로 크기를 지정하고 싶다면, box-sizing 속성을 바꿔주면 됨. 기본값 : content-box 대신, border-box
 
   ```css
@@ -140,12 +174,37 @@ url('c.png');
   }
   ```
 
+  - 전체 요소: 100px
+  - 콘텐츠 영역: 100 - 60(패딩) = 40px
+  - 더 직관적! 지정한 크기가 바로 실제 크기
+
 - **자동으로 채우기** : auto
 
   ```css
-  margin: 16px auto;
-  width: 520px; //반드시 너비가 정해져 있어야 자동으로 채울 수 있음.
+  .container {
+    margin: 16px auto;
+    width: 520px; //반드시 너비가 정해져 있어야 자동으로 채울 수 있음.
+  }
   ```
+
+  하지만, 반응형을 구현하기 위해서는 `max-width`를 더 많이씀.
+
+  ```css
+  .container {
+    max-width: 520px; /* 요소의 최대 너비를 520px로 제한 */
+    margin: 16px auto;
+  }
+
+  @media (max-width: 768px) {
+    /* 화면 크기가 768px 이하일 때 적용 */
+    .container {
+      margin: 16px 20px; /* 모바일에서는 좌우 여백 */
+    }
+  }
+  ```
+
+  - 화면이 560px 이상: container는 520px (고정)
+  - 화면이 560px 미만: container는 (화면크기 - 40px)로 동적 변화
 
 ### 마진 상쇄
 
@@ -170,7 +229,7 @@ url('c.png');
 
     <img src = 'https://bakey-api.codeit.kr/api/files/resource?root=static&seqId=5632&directory=margin-padding-summary-01a.png&name=margin-padding-summary-01a.png'>
 
-    -> 둘 사이의 마진은 30px이 된다.
+    -> 둘 사이의 마진은 30px이 된다. (큰 값 따라간다.)
 
 2.  부모-자식 관계 : 부모 요소에 패딩, 보더, 인라인 콘텐트가 없는 경우, 자식의 상단 마진이 부모의 상단 마진과 결합됨
 
@@ -198,7 +257,7 @@ url('c.png');
 
     <img src = 'https://bakey-api.codeit.kr/api/files/resource?root=static&seqId=5632&directory=margin-padding-summary-01.png&name=margin-padding-summary-01.png'>
 
-    -> b,c는 부모자식 관계이고, 위쪽 마진은 40px이 됨. 이 마진값을 이웃한 #a와 겹치면, #a와 #b 사이의 마진은 40px임
+    -> b,c는 부모자식 관계이고, 위쪽 마진은 40px이 됨. 이 마진값을 이웃한 #a와 겹치면, #a와 #b 사이의 마진은 40px임 (큰 값 따라간다.)
 
 3.  빈 블록 : 높이가 0인 요소의 상하 마진이 서로 상쇄됨
 
@@ -210,7 +269,7 @@ url('c.png');
     }
     ```
 
-    -> 요소안에 콘텐츠가 없고, height도 0이면, margin-top과 margin-bottom이 서로 상쇄되어 하나만 적용. 즉, 총 여백은 20px (둘중 더 큰값 적용)
+    -> 요소안에 콘텐츠가 없고, height도 0이면, margin-top과 margin-bottom이 서로 상쇄되어 하나만 적용. 즉, 총 여백은 20px (큰 값 따라간다.)
 
 방지하는 방법
 
@@ -222,6 +281,7 @@ url('c.png');
 
 1. block
    : 위에서 아래로 차례대로 배치되고, 크기를 지정할 수 있다
+
    기본적으로 display 값이 block 인 태그들
 
    1. &lt;h1&gt;, &lt;h2&gt;, …, &lt;h6&gt;
@@ -277,6 +337,30 @@ url('c.png');
 }
 ```
 
+```css
+/* 태그 선택자 */
+h1 {
+}
+
+/* 클래스 선택자 */
+.class-name {
+}
+
+/* 아이디 선택자 */
+#id-name {
+}
+
+/* 전체 선택자 */
+* {
+}
+
+/* 속성 선택자 */
+[type="text"] {
+} /* → <input type="text">만 선택 */
+input[placeholder] {
+} /*  <input placeholder="아무값">이든 placeholder 속성이 있으면 선택 */
+```
+
 #### 선택자 붙여 쓰기
 
 : 여러 조건을 동시에 만족하는 요소를 선택하고 싶을 때
@@ -303,7 +387,7 @@ url('c.png');
    h2#mongolia.large.title
    ```
 
-#### 자손 결합자
+#### 결합자
 
 : 스페이스(띄어쓰기)로 선택자를 이어줌
 
@@ -317,9 +401,46 @@ url('c.png');
 </div>
 ```
 
+`자손 결합자 (공백) `
+
 ```css
 .article img {
   width: 100%;
+}
+```
+
+-> 모든 후손 다 적용된다.
+
+`자식 결합자 (>) `
+
+```css
+.article > p {
+  /* article의 직계 자식 p만 */
+  font-weight: bold;
+}
+```
+
+`인접 형제 결합자 (+)`
+
+```html
+<h2 id="mongolia">몽골 여행</h2>
+<p>바로 다음 단락</p>
+<p>그 다음 단락</p>
+```
+
+```css
+#mongolia + p {
+  /* h2 바로 다음 p만 */
+  font-size: 1.1em;
+}
+```
+
+`일반 형제 결합자 (~)`
+
+```css
+#mongolia ~ p {
+  /* h2 이후 모든 p들 */
+  margin-top: 0.5em;
 }
 ```
 
@@ -339,8 +460,45 @@ url('c.png');
 4. :nth-child(n)
    : n번째 자식 요소
 
+   ```css
+   tr:nth-child(odd)    /* 1, 3, 5... (홀수) */
+   tr:nth-child(even)   /* 2, 4, 6... (짝수) */
+   tr:nth-child(3n+1)   /* 1, 4, 7, 10... */
+   tr:nth-child(-n+3)   /* 처음 3개 */
+   ```
+
 5. :not(...)
    : 해당 조건이 아닌 요소 선택
+
+   ```css
+   /* 마지막 li 빼고 모두 아래 보더 */
+   li:not(:last-child) {
+     border-bottom: 1px solid #eee;
+   }
+
+   /* 마지막 카드 빼고 모두 오른쪽 마진 */
+   .card:not(:last-child) {
+     margin-right: 20px;
+   }
+   /* 네비게이션: 첫 번째 빼고 모두 왼쪽 보더 */
+   .nav-item:not(:first-child) {
+     border-left: 1px solid #ddd;
+   }
+
+   /* 폼: 체크박스/라디오 빼고 모든 input 스타일 */
+   input:not([type="checkbox"]):not([type="radio"]) {
+     border: 1px solid #ccc;
+     padding: 10px;
+   }
+
+   /* 리스트: empty 클래스 없는 항목만 표시 */
+   .list-item:not(.empty) {
+     display: block;
+   }
+   ```
+
+6. :disabled
+   : 클릭 금지되었을 때
 
 ### 가상 요소
 
@@ -354,6 +512,25 @@ h1::before {
 
 -> 실제 HTML에 없음에도 불구하고 h1앞에 불 이모지가 생김
 
+#### 실용적인 예시
+
+```css
+/* 첫 번째 단락만 큰 글씨 */
+.article p:first-child {
+  font-size: 1.2em;
+}
+
+/* 마지막 아이템 마진 제거 */
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 홀수 번째 행 배경색 */
+tr:nth-child(odd) {
+  background-color: #f5f5f5;
+}
+```
+
 ### 캐스케이드
 
 : 우선순위가 높은 규칙일수록 우선적으로 적용하는 속성
@@ -361,12 +538,30 @@ h1::before {
 1. 코드가 더 아래에 있을 수록 우선순위 높음
 2. 브라우저에서 기본으로 제공하는 스타일시트 < 우리가 작성한 코드 <br />(h2[브라우저 기본] < h2[우리가 작성])
 3. 명시도 계산 (아이디, 클래스, 태그 순)
-4. 상속되는 속성들이 정해져 있음 (color, font-family, font-size, font-weight, line-height, text-align 등 ...) -> 텍스트 관련은 기본적으로 **자식도 똑같이 써라**가 기본정책이고, 레이아웃이나 박스 스타일은 **자식이 알아서 정하라**는 방식
+4. 상속되는 속성들이 정해져 있음 (`color`, `font-family`, `font-size`, `font-weight`, `line-height`, `text-align` 등 ...) -> 텍스트 관련은 기본적으로 **자식도 똑같이 써라**가 기본정책이고, 레이아웃이나 박스 스타일은 **자식이 알아서 정하라**는 방식
 
-   +) 상속안되는 속성도 상속되게 ? = inherit 키워드 사용
+```css
+/* 우선순위: 높음 → 낮음 */
+#id {
+} /* 100점 */
+.class {
+} /* 10점 */
+p {
+} /* 1점 */
+* {
+} /* 0점 */
 
-   ```css
-   div {
-     background-color: inherit; /* 부모의 배경색을 따라가게 강제 */
-   }
-   ```
+/* 조합 시 점수 합산 */
+p.class {
+} /* 11점 */
+#id.class {
+} /* 110점 */
+```
+
++) 상속안되는 속성도 상속되게 ? = inherit 키워드 사용
+
+```css
+div {
+  background-color: inherit; /* 부모의 배경색을 따라가게 강제 */
+}
+```
