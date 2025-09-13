@@ -1,4 +1,10 @@
-## Git
+# Git
+
+##목차
+
+- [Git vs GitHub](./Git.md#git-vs-github)
+- [Git에서 파일들의 상태](./Git.md#git에서-파일들의-상태)
+- [Git의 다양한 명령어들](./Git.md#git의-다양한-명령어들)
 
 ### Git VS Github
 
@@ -14,12 +20,12 @@ github : Git 저장소를 온라인에 저장하고 관리할 수 있는 플랫�
 
 1. 스마트폰 OS (안드로이드/iOS)
 
-   안드로이드, iOS는 플랫폼
+   안드로이드, iOS는 플랫폼 <br />
    이 기본 시스템 위에서 카카오톡, 유튜브 등의 앱들이 실행됨.
 
 2. 쇼핑몰 <br />
-   쇼핑몰 건물은 플랫폼.
-   다양한 상점들이 이 기본 구조 안에서 영업을 함.
+   쇼핑몰 건물은 플랫폼. <br />
+   다양한 상점들이 이 기본 구조 안에서 영업을 함. <br />
    쇼핑몰은 전기, 수도, 보안 등의 기본 서비스를 제공하고, 상점들은 그 환경 안에서 자신들의 사업을 운영
 
 ### Git에서 파일들의 상태
@@ -41,7 +47,7 @@ github : Git 저장소를 온라인에 저장하고 관리할 수 있는 플랫�
     : 현재 디렉토리를 Git이 관리하는 디렉토리로(working directory) 설정하고, 그 안에 레포지토리(.git 디렉토리) 생성
 
 2.  git reset
-    : git add를 취소한다. (staging area에 올렸던 파일 다시 내리기) 3개의 옵션이 있음.
+    : git add를 취소한다. (staging area에 올렸던 파일 다시 내리기) 3개의 옵션이 있다.
 
     1. --soft : 커밋만 되돌리고 변경 내용은 스테이징 영역에 유지 (git add한 상태로 되돌리기) (HEAD가 특정 커밋을 가리키도록 이동시킴)
     2. --mixed(기본값) : 커밋과 스테이징을 되돌리고 변경 내용은 작업 디렉토리에 유지 (git add 하기 전 상태로 되돌리기) (staging area도 특정 커밋처럼 리셋)
@@ -79,24 +85,26 @@ github : Git 저장소를 온라인에 저장하고 관리할 수 있는 플랫�
         git commit --amend
         ```
 
+        -> 이러면 index.js 파일이 기존의 마지막 커밋에 포함됨.
+
 ⚠️ 주의사항 : 로컬에서 혼자 작업 중일 때는 아무 문제 없지만, 이미 push된 커밋을 amend 하면 force push 해야 해서 협업중엔 조심해야함. (=> 커밋 해시가 바뀜)
 
 커밋해시 ? = 커밋의 모든 정보 (커밋 메시지, 커밋 시간, 작성자 등)를 기반으로 만들어져서 하나의 커밋 해시를 만들어냄. 마치 "DNA"같은 거임
 
 원래는 abc123이라는 커밋이여서 다른 개발자들이 abc123이라는 커밋을 가지고 있는데, 내가 force push 해버리면 def456으로 바뀌고 push를 하면 다른 사람 히스토리랑 충돌난다!
 
-5. git clone 할 때 하위폴더로 다시 생성을 하기 때문에, git clone remote 주소 .을 하면(.을 붙히면) 현재 폴더에 clone이 된다
+5.  git clone 할 때 하위폴더로 다시 생성을 하기 때문에, git clone remote 주소 .을 하면(.을 붙히면) 현재 폴더에 clone이 된다
 
-6. 커밋에 태그도 달 수 있다. (version1, version2 ...)
-   : git tag [태그 이름] [커밋 아이디] <br />
-   ex) git tag Version1 84ab
+6.  커밋에 태그도 달 수 있다. (version1, version2 ...)
+    : git tag [태그 이름] [커밋 아이디] <br />
+    ex) git tag Version1 84ab
 
-7. git push -u origin master (-u는 --set-upstream 옵션의 약자)
-   : 이 옵션을 주면 로컬 레포에 있는 master 브랜치가 origin에 있는 master 브랜치를 tracking(추적)하는 걸로 설정됨 -> 그래서 git push, git pull만 해줘도 동작이 됨
+7.  git push -u origin master (-u는 --set-upstream 옵션의 약자)
+    : 이 옵션을 주면 로컬 레포에 있는 master 브랜치가 origin에 있는 master 브랜치를 tracking(추적)하는 걸로 설정됨 -> 그래서 git push, git pull만 해줘도 동작이 됨
 
-8. git fetch : 리모트 레포지토리에 있는 브랜치의 내용을 일단 가져와서 살펴본 후에 머지하고 싶을 때 사용 (-> 리모트 레포지토리에 있는 내용을 일단 로컬로 가져올 때. git pull과는 다름. git pull은 가져오고 자동으로 병합)
+8.  git fetch : 리모트 레포지토리에 있는 브랜치의 내용을 일단 가져와서 살펴본 후에 머지하고 싶을 때 사용 (-> 리모트 레포지토리에 있는 내용을 일단 로컬로 가져올 때. git pull과는 다름. git pull은 가져오고 자동으로 병합)
 
-9. 어떤 커밋으로 작성됐는지를 볼 때 ? -> git blame
+9.  어떤 커밋으로 작성됐는지를 볼 때 ? -> git blame
 
 10. 커밋을 누가 한건가 ? -> git show
 
@@ -107,6 +115,20 @@ github : Git 저장소를 온라인에 저장하고 관리할 수 있는 플랫�
     : 커밋 히스토리가 더 깔끔하다는 장점이 있다. (git rebase --continue로 진행)
 
     🔍설명 : A, B 브랜치가 있는 상태에서 지금 HEAD가 A 브랜치를 가리킬 때, git rebase B를 실행하면 A, B 브랜치가 분기하는 시작점이 된 공통 커밋 이후로부터 존재하는 A 브랜치 상의 커밋들이 그대로 B 브랜치의 최신 커밋 이후로 이어붙여짐(git merge와 같은 효과를 가지지만 커밋 히스토리가 한 줄로 깔끔하게 된다는 차이점이 있음)
+
+    `merge`
+
+    ```bash
+       C---D  (A)
+       /    \
+    A---B---E---F---G  (merge 커밋 G 생성)
+    ```
+
+    `rebase`
+
+    ```bash
+    A---B---E---F---C'---D'  (한 줄로 깔끔!)
+    ```
 
 13. 작업내용을 임시로 저장하고, 적용하고, 지우고 싶을 때 ? -> git stash, git stash apply, git stash drop, git stash pop
     : 작업 내용을 나중에 또 쓸 필요가 있다면 git stash apply를, 나중에 또 쓸 필요가 없다면 git stash pop을 쓰면 됨 (git stash apply [커밋 아이디] 처럼 특정 작업 내용을 가져오는 것도 가능. 다른것들도(drop, pop) 마찬가지)
@@ -152,7 +174,7 @@ G, H, I는 feature 브랜치에서 작업한 커밋
    git checkout -b temp-fix
    ```
 
-2. 정상적인 커밋만 cherry-pick
+2. 정상적인 커밋만 cherry-pick (커밋 해시는 `git log`)
 
    ```bash
    git cherry-pick <G의 해시> <I의 해시>
