@@ -2,6 +2,21 @@
 
 ## 목차
 
+- [링크 상대주소](./HTML.md#링크의-상대-주소)
+- [URI 프래그먼트](./HTML.md#uri-프래그먼트)
+- [주요 태그 및 기능](./HTML.md#주요-태그--기능-정리)
+- [리스트](./HTML.md#리스트)
+- [테이블](./HTML.md#테이블)
+- [폼](./HTML.md#폼)
+- [datalist 태그](./HTML.md#datalist--input에-입력-자동완성-옵션-제공)
+- [select 태그](./HTML.md#select-태그--옵션-선택)
+- [입력 형식 제한하기 : pattern](./HTML.md#정규표현식으로-입력-형식-제한---pattern)
+- [자동완성 : autocomplete](./HTML.md#자동완성--autocomplete--on--email-tel값도-쓸-수-있다)
+- [긴글 : textarea](./HTML.md#긴글)
+- [외부 파일 불러오기 : link](./HTML.md#외부에-있는-것을-불러올-때--link)
+- [자바스크립트 파일 불러오기 : script](./HTML.md#자바스크립트-파일을-불러올-때--script-태그)
+- [시맨틱태그](./HTML.md#시맨틱-태그)
+
 ### 링크의 상대 주소
 
 현재 폴더 : 점 한개 (./) <br />
@@ -475,7 +490,9 @@ ex.
 4. `title`
    → 패턴을 만족하지 않을 때 브라우저가 보여주는 안내 메시지에 표시됨.
 
-### 자동완성 : `autocomplete` = "on" , email, tel값도 쓸 수 있다.
+### 자동완성 : `autocomplete`
+
+"on" , "email", "tel"값도 쓸 수 있다.
 
 ex.
 
