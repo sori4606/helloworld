@@ -30,7 +30,7 @@ SN74LS04 . . . D, DB, N, OR NS PACKAGE <br />
 <br />
 
 <div align = "center">
-SN5404 . . . W PACKAGE
+SN5404 . . . W PACKAGE <br />
 
 <img width="457" height="366" alt="W package" src="https://github.com/user-attachments/assets/968730ce-fcf4-4cf3-a030-c69fe527dcb1" />
 
@@ -41,7 +41,7 @@ SN5404 . . . W PACKAGE
 
 
 <div align = "center">
-SN54LS04, SN54S04 . . . FK PACKAGE
+SN54LS04, SN54S04 . . . FK PACKAGE <br />
 
 <img width="426" height="483" alt="FK package" src="https://github.com/user-attachments/assets/2712c983-8a3c-41fa-97e6-56dd03f92cef" />
 
